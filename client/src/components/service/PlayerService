@@ -1,0 +1,110 @@
+import axios from "axios"
+
+// Set up axios instance with auth header
+const api = axios.create({
+  baseURL: "/api/players",
+})
+
+// Add auth token to requests if available
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token")
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  (error) => Promise.reject(error),
+)
+
+export const playerService = {
+  // Get all players
+  getAllPlayers: async () => {
+    try {
+      const response = await api.get("/")
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Get current player of the month
+  getCurrentPlayerOfMonth: async () => {
+    try {
+      const response = await api.get("/player-of-month")
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Get all players of the month (archive)
+  getPlayersOfMonth: async () => {
+    try {
+      const response = await api.get("/archive")
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Get player by ID
+  getPlayerById: async (id) => {
+    try {
+      const response = await api.get(`/${id}`)
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Create new player
+  createPlayer: async (playerData) => {
+    try {
+      const response = await api.post("/", playerData)
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Update player
+  updatePlayer: async (id, playerData) => {
+    try {
+      const response = await api.put(`/${id}`, playerData)
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Set player as player of the month
+  setPlayerOfMonth: async (id, details) => {
+    try {
+      const response = await api.put(`/player-of-month/${id}`, { playerOfMonthDetails: details })
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Delete player
+  deletePlayer: async (id) => {
+    try {
+      const response = await api.delete(`/${id}`)
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Archive players by year
+  archivePlayersByYear: async (year) => {
+    try {
+      const response = await api.post(`/archive/${year}`)
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
+}
