@@ -1,13 +1,14 @@
 {
   "name": "mernbefa",
   "version": "1.0.0",
-  "description": "",
+  "description": "football blog for budueites football club",
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "node server/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server/app.js",
-    "build": "npm install && npm install --prefix client"
+    "build": "npm install && npm install --prefix client && npm run build --prefix client"
   },
   "keywords": [],
   "author": "",

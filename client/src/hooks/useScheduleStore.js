@@ -1,4 +1,4 @@
-import {create} from 'zustand';
+import { create } from 'zustand';
 
 const CACHE_KEY = 'schedules_cache';
 const CACHE_TTL = 3600 * 1000; // 1 hour in ms
@@ -21,7 +21,7 @@ const useSchedulesStore = create((set) => ({
             }
 
             // Fetch from backend
-            const response = await fetch('http://localhost:5000/api/schedule');
+            const response = await fetch('/api/schedule');
             if (!response.ok) {
                 throw new Error('Failed to fetch schedules');
             }

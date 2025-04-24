@@ -18,35 +18,58 @@ const __dirname = path.dirname(__filename);
 
 const startApp = async () => {
     try {
+        // Connect to MongoDB and Redis
         await connectDB();
         const redisClient = getRedisClient();
         await seedAdmin();
 
-        app.use(cors());
+        // CORS configuration
+        const corsOptions = {
+            origin: process.env.NODE_ENV === 'production'
+                ? ['https://befav2.onrender.com/']
+                : ['http://localhost:5173', 'http://localhost:5000'],
+            methods: ['GET', 'POST', 'PUT', 'DELETE'],
+            credentials: true,
+        };
+        app.use(cors(corsOptions));
+
+        // Middleware
         app.use(express.json());
 
+        // API routes
         app.use('/api', apiRoutes);
 
+        // Serve static frontend
         const staticPath = path.join(__dirname, '..', 'client', 'dist');
+        if (!fs.existsSync(staticPath)) {
+            console.error('Static path not found:', staticPath);
+        }
         app.use(express.static(staticPath));
 
+        // SPA routing
         const indexPath = path.join(staticPath, 'index.html');
         app.get('*', (req, res, next) => {
             if (!fs.existsSync(indexPath)) {
-                return next(new Error('index.html not found in client/dist'));
+                console.error('index.html not found at:', indexPath);
+                return res.status(500).json({ message: 'Frontend build not found. Please run npm run build.' });
             }
             res.sendFile(indexPath);
         });
 
+        // Error handling
         app.use((err, req, res, next) => {
+            console.error('Server error:', err.message);
             res.status(500).json({ message: err.message || 'Server error' });
         });
 
+        // Start server
         const server = app.listen(port, () => {
-            console.log(`Server started at http://localhost:${port}`);
+            console.log(`Server started at port ${port}`);
         });
 
+        // Graceful shutdown
         process.on('SIGTERM', async () => {
+            console.log('SIGTERM received. Shutting down...');
             server.close();
             await mongoose.connection.close();
             await redisClient.quit();
