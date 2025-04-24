@@ -1,19 +1,16 @@
 import mongoose from "mongoose";
 const scheduleSchema = new mongoose.Schema({
-    id: {
-        type: Number,
-        required: true,
-        unique: true,
-    },
     day: {
         type: String,
         required: true,
+        enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
     },
     time: {
         type: String,
         required: true,
+        match: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, // Matches HH:MM (24-hour)
     },
-    group: {
+    jerseyColor: {
         type: String,
         required: true,
     },
@@ -25,8 +22,7 @@ const scheduleSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-}, {
-    timestamps: true,
 });
 
-module.exports = mongoose.model('Schedule', scheduleSchema);
+const Schedule = mongoose.model('Schedule', scheduleSchema);
+export default Schedule;

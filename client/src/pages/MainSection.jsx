@@ -1,9 +1,8 @@
-"use client";
 import { Box, IconButton, Flex, Text } from "@chakra-ui/react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import AnnouncementsSection from "../components/AnnouncementsSection";
 import SchedulesSection from "../components/ScheduleSection.jsx";
-import PlayerOfTheMonth from "../components/PlayerOfTheMonth.jsx";
+
 
 const MainContent = ({ isSidebarOpen, onToggleSidebar }) => {
     return (
@@ -19,6 +18,7 @@ const MainContent = ({ isSidebarOpen, onToggleSidebar }) => {
                 color="white"
                 h="60px"
                 alignItems="center"
+                justifyContent="center"
                 px="2"
                 display={{ base: "none", md: "flex" }}
                 position={{ md: "fixed" }}
@@ -26,23 +26,25 @@ const MainContent = ({ isSidebarOpen, onToggleSidebar }) => {
                 left={{ md: 0 }}
                 right={{ md: 0 }}
                 zIndex={{ md: 9 }}
+                textAlign="center"
             >
-                <IconButton
-                    aria-label={isSidebarOpen ? "Close menu" : "Open menu"}
-                    icon={isSidebarOpen ? <FiChevronLeft /> : <FiChevronRight />}
-                    onClick={onToggleSidebar}
-                    variant="ghost"
-                    color="gray.400"
-                    _hover={{ bg: "green.500", color: "white" }}
-                />
+                {/*<IconButton*/}
+                {/*    aria-label={isSidebarOpen ? "Close menu" : "Open menu"}*/}
+                {/*    icon={isSidebarOpen ? <FiChevronLeft /> : <FiChevronRight />}*/}
+                {/*    onClick={onToggleSidebar}*/}
+                {/*    variant="ghost"*/}
+                {/*    color="gray.400"*/}
+                {/*    _hover={{ bg: "green.500", color: "white" }}*/}
+                {/*/>*/}
                 <Text ml="4" fontWeight="bold" color="green.400">
                     BEFA - Budu Elite Football Academy
                 </Text>
             </Flex>
             <Box pt={{ base: 0, md: "60px" }} p={{ base: "4", md: 0 }} pb={{ base: "4", md: "16" }}>
                 <SchedulesSection />
-                <AnnouncementsSection />
-                <PlayerOfTheMonth/>
+                {/*<AnnouncementsSection />*/}
+                {/*<AnnouncementsSection />*/}
+                {/*<AnnouncementsSection />*/}
             </Box>
         </Box>
     );

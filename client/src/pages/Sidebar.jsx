@@ -33,7 +33,8 @@ const NavItems = [
     { name: 'PLAYER OF THE MONTH', icon: FiAward, href: '#player-of-month' },
 ];
 
-const logoPath = '../assets/Befa.png';
+const logoPath='// https://res.cloudinary.com/dgvjxhqjd/image/upload/v1745378644/elvuhnbo1fjdbdkjjksz.png'
+
 
 const NavItem = ({ icon, children, href, onClose, isActive }) => {
     const handleClick = (e) => {
@@ -285,3 +286,4 @@ const Sidebar = ({ isOpen, onToggle }) => {
 };
 
 export default Sidebar;
+
