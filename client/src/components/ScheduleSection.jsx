@@ -1,3 +1,4 @@
+// SchedulesSection.jsx
 import { useEffect } from 'react';
 import {
     Box,
@@ -9,7 +10,6 @@ import {
     Th,
     Td,
     TableContainer,
-    Badge,
     Card,
     Text,
     Spinner,
@@ -20,9 +20,12 @@ const SchedulesSection = () => {
     const { schedules, loading, error, fetchSchedules } = useSchedulesStore();
 
     useEffect(() => {
-        // Fetch schedules when the component mounts
+        console.log('Fetching schedules on mount...');
         fetchSchedules();
     }, [fetchSchedules]);
+
+    // Log schedules for debugging
+    console.log('Schedules state:', schedules);
 
     return (
         <Box id="schedules" pt="20" pb="16" bg="gray.50">
@@ -37,16 +40,14 @@ const SchedulesSection = () => {
                 </Box>
             )}
 
-            {error ? (
-                // Display error message if there is an error
+            {error && (
                 <Text color="red.500" mb="4">
-                    {error} {/* Display the error message */}
+                    Error: {error}
                 </Text>
-            ) : (
-                !loading && // Only display this if NOT loading and no error
-                (!Array.isArray(schedules) || schedules.length === 0) && (
-                    <Text>No schedules available.</Text>
-                )
+            )}
+
+            {!loading && !error && (!Array.isArray(schedules) || schedules.length === 0) && (
+                <Text>No schedules available.</Text>
             )}
 
             {!loading && !error && Array.isArray(schedules) && schedules.length > 0 && (
@@ -69,11 +70,15 @@ const SchedulesSection = () => {
                             <Tbody>
                                 {schedules.map((schedule) => (
                                     <Tr key={schedule._id}>
-                                        <Td fontWeight="bold">{schedule.day}</Td>
-                                        <Td>{schedule.time}</Td>
-                                        <Td>{schedule.jerseyColor}</Td>
-                                        <Td display={{ base: 'none', md: 'table-cell' }}>{schedule.location}</Td>
-                                        <Td display={{ base: 'none', md: 'table-cell' }}>{schedule.coach}</Td>
+                                        <Td fontWeight="bold">{schedule.day || 'N/A'}</Td>
+                                        <Td>{schedule.time || 'N/A'}</Td>
+                                        <Td>{schedule.jerseyColor || 'N/A'}</Td>
+                                        <Td display={{ base: 'none', md: 'table-cell' }}>
+                                            {schedule.location || 'N/A'}
+                                        </Td>
+                                        <Td display={{ base: 'none', md: 'table-cell' }}>
+                                            {schedule.coach || 'N/A'}
+                                        </Td>
                                     </Tr>
                                 ))}
                             </Tbody>

@@ -1,8 +1,5 @@
 import { create } from 'zustand';
 
-const CACHE_KEY = 'schedules_cache';
-const CACHE_TTL = 3600 * 1000; // 1 hour in ms
-
 const useSchedulesStore = create((set) => ({
     schedules: [],
     loading: false,
@@ -10,27 +7,17 @@ const useSchedulesStore = create((set) => ({
     fetchSchedules: async () => {
         set({ loading: true, error: null });
         try {
-            // Check local cache
-            const cached = localStorage.getItem(CACHE_KEY);
-            if (cached) {
-                const { data, timestamp } = JSON.parse(cached);
-                if (Date.now() - timestamp < CACHE_TTL) {
-                    set({ schedules: data, loading: false });
-                    return;
-                }
-            }
-
-            // Fetch from backend
+            console.log('Fetching schedules from /api/schedule...');
             const response = await fetch('/api/schedule');
+            console.log('Response status:', response.status);
             if (!response.ok) {
-                throw new Error('Failed to fetch schedules');
+                throw new Error(`Failed to fetch schedules: ${response.statusText}`);
             }
             const data = await response.json();
+            console.log('Fetched data:', data);
             set({ schedules: data, loading: false });
-
-            // Update local cache
-            localStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: Date.now() }));
         } catch (err) {
+            console.error('Fetch error:', err);
             set({ error: err.message, loading: false });
         }
     },
