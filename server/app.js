@@ -18,10 +18,21 @@ const __dirname = path.dirname(__filename);
 
 const startApp = async () => {
     try {
-        // Connect to MongoDB and Redis
+        // Connect to MongoDB
+        console.log('Connecting to MongoDB...');
         await connectDB();
+        console.log('MongoDB connected');
+
+        // Connect to Redis
+        console.log('Connecting to Redis...');
         const redisClient = getRedisClient();
+        await redisClient.ping();
+        console.log('Redis connected');
+
+        // Seed admin
+        console.log('Seeding admin user...');
         await seedAdmin();
+        console.log('Admin user seeded');
 
         // CORS configuration
         const corsOptions = {
@@ -37,6 +48,7 @@ const startApp = async () => {
         app.use(express.json());
 
         // API routes
+        console.log('Mounting API routes at /api');
         app.use('/api', apiRoutes);
 
         // Serve static frontend
