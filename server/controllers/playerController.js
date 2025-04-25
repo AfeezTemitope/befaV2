@@ -1,12 +1,11 @@
 import cacheService from '../services/cacheService.js';
 import Player from '../models/player.js';
 import cloudinary from '../config/cloudinary.js';
-import fs from 'fs';
 
 export const postPlayerOfTheMonth = async (req, res) => {
     try {
         const { name, position, description, strengths, captions } = req.body;
-        const files = req.files; // Files from multer
+        const files = req.files; // Files from multer (buffers)
 
         // Validate required fields
         if (!name || !position || !description || !strengths || !files) {
@@ -39,21 +38,20 @@ export const postPlayerOfTheMonth = async (req, res) => {
         }
 
         // Handle image uploads to Cloudinary
-        const uploadedImages = await Promise.all(
-            files.map(async (file, index) => {
-                try {
-                    const result = await cloudinary.uploader.upload(file.path, {
-                        folder: 'befav2/players',
-                        public_id: `${name.replace(/\s+/g, '_')}_${index}_${Date.now()}`,
-                    });
-                    // Delete temporary file
-                    fs.unlinkSync(file.path);
-                    return { url: result.secure_url, caption: parsedCaptions[index] || '' };
-                } catch (uploadError) {
-                    throw new Error(`Failed to upload image ${index + 1}: ${uploadError.message}`);
-                }
-            })
-        );
+        const uploadedImages = [];
+        for (const [index, file] of files.entries()) {
+            try {
+                // Convert buffer to base64 for Cloudinary upload
+                const base64Image = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
+                const result = await cloudinary.uploader.upload(base64Image, {
+                    folder: 'befav2/players',
+                    public_id: `${name.replace(/\s+/g, '_')}_${index}_${Date.now()}`,
+                });
+                uploadedImages.push({ url: result.secure_url, caption: parsedCaptions[index] || '' });
+            } catch (uploadError) {
+                throw new Error(`Failed to upload image ${index + 1}: ${uploadError.message}`);
+            }
+        }
 
         // Parse strengths
         let parsedStrengths;
