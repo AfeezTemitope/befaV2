@@ -2,6 +2,7 @@ import { Box, IconButton, Flex, Text } from "@chakra-ui/react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import AnnouncementsSection from "../components/AnnouncementsSection";
 import SchedulesSection from "../components/ScheduleSection.jsx";
+import PlayerOfTheMonth from "../components/PlayerOfTheMonth.jsx";
 
 
 const MainContent = ({ isSidebarOpen, onToggleSidebar }) => {
@@ -42,6 +43,7 @@ const MainContent = ({ isSidebarOpen, onToggleSidebar }) => {
             </Flex>
             <Box pt={{ base: 0, md: "60px" }} p={{ base: "4", md: 0 }} pb={{ base: "4", md: "16" }}>
                 <SchedulesSection />
+                <PlayerOfTheMonth />
                 {/*<AnnouncementsSection />*/}
                 {/*<AnnouncementsSection />*/}
                 {/*<AnnouncementsSection />*/}
